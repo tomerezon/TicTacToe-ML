@@ -1,0 +1,21 @@
+ public void InsertValidMoves(int[] board, int turn, int moveNum)
+        {
+            int[] prevBoard = new int[9];
+            prevBoard = util.CopyArray(prevBoard, board);
+            if (!util.HasGameEnded(board, moveNum))
+            {
+                for (int i = 0; i < board.Length; i++)
+                {
+                    if (IsCellEmpty(board[i]))
+                    {
+                        board[i] = turn;
+                        if (!db.IsStateExists(board))
+                            db.CreateNewState(moveNum, board);
+                        InsertValidMoves(board, turn * (-1), moveNum + 1);
+                        if (moveNum > 1)
+                            db.InsertNewMoveToPrevState(prevBoard, board);
+                        board[i] = 0;
+                    }
+                }
+            }
+        }
